@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+ 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+        "mindar-face-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-three.prod.js"
+      }
+    }
+  </script>
+  <script type="module" src="CustomJs/main.js"></script>
+  <script type="module" src="CustomJs/sceneSetup.js"></script>
+  <script type="module" src="CustomJs/colorButton.js"></script>
+  <script type="module" src="CustomJs/modelVisibility.js"></script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+     
+    }
+
+    #container {
+      width: 70vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .example-container {
+      overflow: hidden;
+      position: absolute;
+      width: 70vw;
+      height: 100vh;
+    }
+
+    .options-panel {
+      position: fixed;
+      left: 46vw;
+      top: 0;
+      z-index: 2;
+    }
+
+    .options-panel img {
+      border: solid 2px;
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .options-panel img.selected {
+      border-color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+  <!-- <div id="colorPalette" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+    <button class="color-button" data-color="0xff0000"
+      style="background-color: red; width: 50px; height: 50px; font-size: 16px;"></button>
+    <button class="color-button" data-color="0x0000ff"
+      style="background-color: blue;width: 50px; height: 50px; font-size: 16px;"></button>
+    <button class="color-button" data-color="0x00ff00"
+      style="background-color: green;width: 50px; height: 50px; font-size: 16px;"></button>
+     Add more buttons for different colors 
+  </div> -->
+
+  <!-- example-container -->
+  <div class="example-container">
+    <div class="options-panel">
+      <img id="hat1"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/hat/thumbnail.png" style="display: none;" />
+
+        <img id="necklace2"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/hat/thumbnail.png" style="display: none;" />
+
+        <img id="necklace3"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/hat/thumbnail.png" style="display: none;" />
+        
+      <img id="hat2"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/hat2/thumbnail.png" style="display: none;" />
+      <img id="glasses1"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/glasses/thumbnail.png" style="display: none;" />
+      <img id="glasses2"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/glasses2/thumbnail.png" />
+      <img id="earring"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/earring/thumbnail.png" />
+
+        <img id="lips"
+        src="./textures/lips.png" onclick='lipartoggle();'/>
+
+        
+    </div>
+    <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <a-asset-item id="hatModel" src="./models/necklace.glb"></a-asset-item>
+        <a-asset-item id="neckalce2" src="./models/necklace2.glb"></a-asset-item>
+        <a-asset-item id="neckalce3" src="./models/necklace3.glb"></a-asset-item>
+        <a-asset-item id="glassesModel"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/glasses/scene.gltf"></a-asset-item>
+        <a-asset-item id="glassesModel2"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/glasses2/scene.gltf"></a-asset-item>
+        <a-asset-item id="hatModel2"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/hat2/scene.gltf"></a-asset-item>
+        <a-asset-item id="earringModel"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/earring/scene.gltf"></a-asset-item>
+      </a-assets>
+
+      <a-camera active="false" position="0 0 0"></a-camera>
+      <a-entity mindar-face-target="anchorIndex: 168">
+        <a-gltf-model mindar-face-occluder position="0 -0.3 0.15" rotation="0 0 0" scale="0.065 0.065 0.065"
+          src="#headModel"></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 10">
+        <a-gltf-model rotation="0 -90 0" position="0 -1.8 -1" scale="0.7 0.7 0.7" src="#hatModel" class="hat1-entity"
+          visible="false"></a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-face-target="anchorIndex: 10">
+        <a-gltf-model rotation="0 -90 0" position="0 -1.8 -1" scale="0.7 0.7 0.7" src="#neckalce2" class="necklace2-entity"
+          visible="false"></a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-face-target="anchorIndex: 10">
+        <a-gltf-model rotation="0 -90 0" position="0 -2 -1" scale="0.9 0.9 0.9" src="#neckalce3" class="necklace3-entity"
+          visible="false"></a-gltf-model>
+      </a-entity>
+
+
+      <a-entity mindar-face-target="anchorIndex: 10">
+        <a-gltf-model rotation="0 -0 0" position="0 -0.2 -0.5" scale="0.008 0.008 0.008" src="#hatModel2"
+          class="hat2-entity" visible="false"></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 168">
+        <a-gltf-model rotation="0 -0 0" position="0 0 0" scale="0.01 0.01 0.01" src="#glassesModel"
+          class="glasses1-entity" visible="false"></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 168">
+        <a-gltf-model rotation="0 -90 0" position="0 -0.3 0" scale="0.55 0.55 0.55" src="#glassesModel2"
+          class="glasses2-entity" visible="false"></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 127">
+        <a-gltf-model rotation="-0.1 -0 0" position="0 -0.3 -0.3" scale="0.05 0.05 0.05" src="#earringModel"
+          class="earring-entity" visible="false"></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 356">
+        <a-gltf-model rotation="0.1 -0 0" position="0 -0.3 -0.3" scale="0.05 0.05 0.05" src="#earringModel"
+          class="earring-entity" visible="false"></a-gltf-model>
+      </a-entity>
+    </a-scene>
+  </div>
+
+
+
+  <link rel="stylesheet" href="Css/styles.css">
+
+  <div class="dropdownlip">
+  	<div class="sec-center"> 	
+	  	<input class="dropdown" type="checkbox" id="dropdown" name="dropdown"/>
+	  	<label class="for-dropdown" for="dropdown">Select Lips Colour<i class="uil uil-arrow-down"></i></label>
+  		<div class="section-dropdown"> 
+  		
+  			<a href= "#" > <button class="buttonlipdropdown color-button" data-color="0xff0000">Red<i class="uil uil-arrow-right"></i> </button></a>
+        <a href= "#" > <button class="buttonlipdropdown color-button" data-color="0x00ff00">Green<i class="uil uil-arrow-right"></i> </button></a>
+        <a href= "#" > <button class="buttonlipdropdown color-button" data-color="0x0000ff">Blue<i class="uil uil-arrow-right"></i> </button></a>
+  		</div>
+  	</div>
+  </div>
+
+
+<div class="dropdownchains">
+  <div class="sec-center">    
+    <input class="dropdown" type="checkbox" id="dropdown-2" name="dropdown-2"/>
+    <label class="for-dropdown" for="dropdown-2">Select Chains<i class="uil uil-arrow-down"></i></label>
+    <div class="section-dropdown"> 
+      <a href= "#" onclick='setupModelVisibilityParams("hat1", "hat1-entity", true);' > <button class="buttonlipdropdown">Neckalce 1<i class="uil uil-arrow-right"></i> </button></a>
+      <a href= "#" onclick='setupModelVisibilityParams("necklace2", "necklace2-entity", true);' > <button class="buttonlipdropdown">Neckalce 2<i class="uil uil-arrow-right"></i> </button></a>
+      <a href= "#" onclick='setupModelVisibilityParams("necklace3", "necklace3-entity", true);'> <button class="buttonlipdropdown " >Neckalce 3<i class="uil uil-arrow-right"></i> </button></a>
+    </div>
+</div>
+</div>
+
+
+  
+</body>
+
+</html>
